@@ -476,9 +476,7 @@ public final class RecursiveDescentParser {
                     }
                     case mminus: {
                         scan();
-                        MJExpressionNode var = new MJVarRefNode(currentMethod, name);
-                        MJExpressionNode val = new MJVarValueNode(currentMethod, name);
-                        res = MJDecrementStatementNodeGen.create(var, val);
+                        res = MJDecrementStatementNodeGen.create(new MJVarRefNode(currentMethod, name), new MJVarValueNode(currentMethod, name));
                         break;
                     }
                     default:
