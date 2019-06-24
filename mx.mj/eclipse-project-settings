@@ -1,0 +1,5 @@
+logToConsole=False
+absolutePaths=False
+EXTRA_JAVA_HOMES=None
+PATH=/home/davidleopoldseder/Work/Source/mx:/home/davidleopoldseder/Work/Source/oraclejdk1.8.0_212-jvmci-20-b01:/home/davidleopoldseder/Software/VPN/ocproxy:/home/davidleopoldseder/Work/Benchmarks/SPECjvm2008:/home/davidleopoldseder/Work/Benchmarks/specjbb2005:/home/davidleopoldseder/Work/Source/mx:/home/davidleopoldseder/Work/Source/oraclejdk1.8.0_212-jvmci-20-b01:/home/davidleopoldseder/Software/VPN/ocproxy:/home/davidleopoldseder/Work/Benchmarks/SPECjvm2008:/home/davidleopoldseder/Work/Benchmarks/specjbb2005:/usr/lib64/qt-3.3/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/home/davidleopoldseder/bin:/home/davidleopoldseder/Software/json/jsonnet:/home/davidleopoldseder/Work/Source/eclipse::/home/davidleopoldseder/bin:/home/davidleopoldseder/Software/json/jsonnet:/home/davidleopoldseder/Work/Source/eclipse:
+JAVA_HOME=../../JDK/oraclejdk1.8.0_212-jvmci-19-b01/

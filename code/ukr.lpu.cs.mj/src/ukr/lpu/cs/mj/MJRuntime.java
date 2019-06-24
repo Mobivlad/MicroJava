@@ -4,16 +4,30 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.oracle.truffle.api.RootCallTarget;
+
 import ukr.lpu.cs.mj.parser.RecursiveDescendScanner;
 import ukr.lpu.cs.mj.parser.RecursiveDescentParser;
 
 public class MJRuntime {
-
     public static void main(String[] args) {
-        parseRD(mjProgramRD);
-        parseRD(whileLoopRD);
-        System.out.println("Hello world from you Truffle MJ interpreter");
+        parseRD(mjTestRD);
     }
+
+    static String mjTestRD = ""//
+                    + "program Sample { "//
+                    + "void main() int i;{ \n"//
+                    + "i--; print(i);\n"//
+                    + "}\n" //
+                    + "}\n";
+
+    static String mjReturnRD = "program P int i;{"//
+                    + "             int foo() { return \"Hello\"; }" //
+                    + "             void main() { "//
+                    + "                 i = foo();"//
+                    + "                 print(i);"//
+                    + "             }"//
+                    + "}";
 
     static String mjProgramRD = ""//
                     + "program Sample { "//
@@ -29,9 +43,9 @@ public class MJRuntime {
                     + "}";
 
     static String whileLoopRD = "program P {"//
-                    + "             void foo(int i,int j) {print(i+j);}" //
+                    + "             void foo(int i,int j) { print(i+j);}" //
                     + "             void main () int i;{ "//
-                    + "                 i =0; "//
+                    + "                 i = 0; "//
                     + "                 while(i<10) {"//
                     + "                     print(i); "//
                     + "                     i=i+1;"//
@@ -49,7 +63,7 @@ public class MJRuntime {
                     + "                 print(0);"//
                     + "             }" //
                     + "             void main () int i;{ "//
-                    + "                 i =0; "//
+                    + "                 i=0; "//
                     + "                 while(i<10) {"//
                     + "                     i=i+1;"//
                     + "                     foo(i,5);" //
@@ -58,7 +72,7 @@ public class MJRuntime {
                     + "}";
 
     static String divAlgorithm = "program DivAlgorithm {"//
-                    + "             int flipSign(int a) int neg;int tmp; int tmpA; {" //
+                    + "int abs(int x){" + "if(x<0){return -x;}" + "return x;" + "}             " + "int flipSign(int a) int neg;int tmp; int tmpA; {" //
                     + "                 neg = 0;"//
                     + "                 tmp = 0;" //
                     + "                 tmpA = a;"//
@@ -102,7 +116,7 @@ public class MJRuntime {
         InputStream is = new ByteArrayInputStream(code.getBytes());
         RecursiveDescendScanner scanner = new RecursiveDescendScanner(new InputStreamReader(is));
         RecursiveDescentParser parser = new RecursiveDescentParser(scanner);
-        parser.parse();
+        RootCallTarget call = parser.parse();
+        call.call();
     }
-
 }

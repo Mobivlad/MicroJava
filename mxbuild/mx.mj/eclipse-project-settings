@@ -1,0 +1,5 @@
+logToConsole=False
+absolutePaths=False
+EXTRA_JAVA_HOMES=None
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+JAVA_HOME=/home/mobivlad/graalCourse/JDK/openjdk1.8.0_212-jvmci-20-b01

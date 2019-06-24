@@ -25,8 +25,6 @@ public final class RecursiveDescendScanner {
     /** Current column in input stream. */
     protected int col;
 
-    // TODO Exercise 2: implementation of scanner
-
     /** Mapping from keyword names to appropriate token codes. */
     private Map<String, Token.Kind> keywords;
 
@@ -161,6 +159,10 @@ public final class RecursiveDescendScanner {
             // ----- character constant
             case '\'':
                 readCharConst(t);
+                break;
+            // ----- string constant
+            case '\"':
+                readStringConst(t);
                 break;
             // ----- simple tokens
             case ';':
@@ -343,12 +345,30 @@ public final class RecursiveDescendScanner {
             sb.append(ch);
             nextCh();
         } while (isDigit(ch));
-        t.kind = Kind.number;
+        if (ch == '.') {
+            readDoubleNumber(sb, t);
+        } else {
+            t.kind = Kind.number;
+            t.str = sb.toString();
+            try {
+                t.val = Integer.parseInt(t.str);
+            } catch (NumberFormatException nfe) {
+                throw new Error("Number too big " + t.str);
+            }
+        }
+    }
+
+    private void readDoubleNumber(StringBuilder sb, Token t) {
+        do {
+            sb.append(ch);
+            nextCh();
+        } while (isDigit(ch));
+        t.kind = Kind.doublenumber;
         t.str = sb.toString();
         try {
-            t.val = Integer.parseInt(t.str);
+            t.dval = Double.parseDouble(t.str);
         } catch (NumberFormatException nfe) {
-            throw new Error("Number too big " + t.str);
+            throw new Error("Number format incorrect" + t.str);
         }
     }
 
@@ -390,6 +410,18 @@ public final class RecursiveDescendScanner {
                 throw new Error("missing quote");
             }
         }
+    }
+
+    private void readStringConst(Token t) {
+        t.kind = Kind.stringConst;
+        StringBuilder sb = new StringBuilder();
+        nextCh();
+        while (ch != '\"') {
+            sb.append(ch);
+            nextCh();
+        }
+        t.str = sb.toString();
+        nextCh();
     }
 
     /** Skips nested multi-line comments. */

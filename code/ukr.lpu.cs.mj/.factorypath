@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factorypath>
+	<factorypathentry enabled="true" id="org.eclipse.jst.ws.annotations.core" kind="PLUGIN" runInBatchMode="false"/>
+	<factorypathentry enabled="true" id="/home/mobivlad/.mx/cache/ANTLR4_946f8aa9daa917dd81a8b818111bec7e288f821a/antlr4.jar" kind="EXTJAR" runInBatchMode="false"/>
+	<factorypathentry enabled="true" id="/GRAAL_SDK/graal-sdk.jar" kind="WKSPJAR" runInBatchMode="false"/>
+	<factorypathentry enabled="true" id="/TRUFFLE_API/truffle-api.jar" kind="WKSPJAR" runInBatchMode="false"/>
+	<factorypathentry enabled="true" id="/TRUFFLE_DSL_PROCESSOR/truffle-dsl-processor.jar" kind="WKSPJAR" runInBatchMode="false"/>
+</factorypath>

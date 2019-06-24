@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>MJRuntime</name>
+	<comment>Updates /home/mobivlad/graalCourse/sources/mj/mxbuild/dists/jdk1.8/mjruntime.jar if a project dependency of MJRuntime is updated</comment>
+	<projects>
+		<project>ukr.lpu.cs.mj</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>auto,full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/CreateMJRuntimeDist.launch</value>
+				</dictionary>
+				<dictionary>
+					<key>incclean</key>
+					<value>true</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>mjruntime.jar</name>
+			<type>1</type>
+			<location>PARENT-2-PROJECT_LOC/mxbuild/dists/jdk1.8/mjruntime.jar</location>
+		</link>
+	</linkedResources>
+</projectDescription>

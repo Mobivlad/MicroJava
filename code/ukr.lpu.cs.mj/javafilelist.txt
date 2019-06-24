@@ -1,0 +1,5 @@
+/home/davidleopoldseder/PhD/Lviv_Teaching/Course_Material/HandsOnPart/Lab_TruffleMJ/Sources/mj/code/ukr.lpu.cs.mj/src/ukr/lpu/cs/mj/MJRuntime.java
+/home/davidleopoldseder/PhD/Lviv_Teaching/Course_Material/HandsOnPart/Lab_TruffleMJ/Sources/mj/code/ukr.lpu.cs.mj/src/ukr/lpu/cs/mj/parser/MJRuntime.java
+/home/davidleopoldseder/PhD/Lviv_Teaching/Course_Material/HandsOnPart/Lab_TruffleMJ/Sources/mj/code/ukr.lpu.cs.mj/src/ukr/lpu/cs/mj/parser/RecursiveDescendScanner.java
+/home/davidleopoldseder/PhD/Lviv_Teaching/Course_Material/HandsOnPart/Lab_TruffleMJ/Sources/mj/code/ukr.lpu.cs.mj/src/ukr/lpu/cs/mj/parser/RecursiveDescentParser.java
+/home/davidleopoldseder/PhD/Lviv_Teaching/Course_Material/HandsOnPart/Lab_TruffleMJ/Sources/mj/code/ukr.lpu.cs.mj/src/ukr/lpu/cs/mj/parser/Token.java

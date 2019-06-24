@@ -11,7 +11,9 @@ public class Token {
 		none("none"),
 		ident("identifier"),
 		number("number"),
+		doublenumber("doublenumber"),
 		charConst("character constant"),
+		stringConst("string constant"),
 		plus("+"),
 		minus("-"),
 		times("*"),
@@ -85,6 +87,7 @@ public class Token {
 
     /** Value of this token (for numbers or character constants). */
     public int val;
+    public double dval;
 
     /** String representation of this token. */
     public String str;
