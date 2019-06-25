@@ -17,10 +17,8 @@ import ukr.lpu.cs.mj.nodes.symbols.MJStringSymbolNode;
 
 public class MJMethodBodyNode extends RootNode {
     private String methodName;
-    private FrameDescriptor global;
     private MJProgramNode program;
     private ValType retType;
-    private HashMap<String, ValType> desc = new HashMap<>();
     private HashMap<String, ValType> arguments = new HashMap<>();
     private FrameDescriptor local;
     private MJStatementNode body;
@@ -33,7 +31,6 @@ public class MJMethodBodyNode extends RootNode {
         super(null, new FrameDescriptor());
         this.program = program;
         this.retType = retType;
-        this.global = program.getFrameDescriptor();
         this.local = getFrameDescriptor();
         this.methodName = str;
     }
@@ -91,17 +88,14 @@ public class MJMethodBodyNode extends RootNode {
     }
 
     public void create() {
-        for (String s : desc.keySet()) {
-            local.addFrameSlot(s, MJNodeFactory.getSymbol(desc.get(s), s), FrameSlotKind.Object);
-        }
         for (String s : arguments.keySet()) {
             local.addFrameSlot(s, MJNodeFactory.getSymbol(arguments.get(s), s), FrameSlotKind.Object);
         }
     }
 
     public void addVars(ValType type, String args[]) {
-        for (String arg : args) {
-            desc.put(arg, type);
+        for (String s : args) {
+            local.addFrameSlot(s, MJNodeFactory.getSymbol(type, s), FrameSlotKind.Object);
         }
     }
 
@@ -110,9 +104,11 @@ public class MJMethodBodyNode extends RootNode {
     }
 
     public MJSymbolNode getVar(String name) {
-        FrameSlot f = local.findFrameSlot(name);
+        FrameDescriptor desk = local;
+        FrameSlot f = desk.findFrameSlot(name);
         if (f == null)
-            f = global.findFrameSlot(name);
+            desk = program.getFrameDescriptor();
+        f = desk.findFrameSlot(name);
         if (f == null) {
             throw new Error("No variable with name '" + name + "'");
         }
