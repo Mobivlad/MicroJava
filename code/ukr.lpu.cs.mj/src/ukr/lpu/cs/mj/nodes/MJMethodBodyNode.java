@@ -11,9 +11,11 @@ import com.oracle.truffle.api.nodes.RootNode;
 import ukr.lpu.cs.mj.MJNodeFactory;
 import ukr.lpu.cs.mj.MJNodeFactory.ValType;
 import ukr.lpu.cs.mj.nodes.exceptions.MJReturnException;
+import ukr.lpu.cs.mj.nodes.statements.MJStatementNode;
 import ukr.lpu.cs.mj.nodes.symbols.MJDoubleSymbolNode;
 import ukr.lpu.cs.mj.nodes.symbols.MJIntSymbolNode;
 import ukr.lpu.cs.mj.nodes.symbols.MJStringSymbolNode;
+import ukr.lpu.cs.mj.nodes.symbols.MJSymbolNode;
 
 public class MJMethodBodyNode extends RootNode {
     private String methodName;
@@ -62,7 +64,7 @@ public class MJMethodBodyNode extends RootNode {
     @Override
     public Object execute(VirtualFrame frame) {
         Object[] args = frame.getArguments();
-        int i = 0;
+        int i = 1;
         for (String s : arguments.keySet()) {
             switch (arguments.get(s)) {
                 case INT:

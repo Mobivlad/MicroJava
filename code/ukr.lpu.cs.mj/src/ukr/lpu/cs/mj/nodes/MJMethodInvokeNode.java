@@ -5,11 +5,10 @@ import java.util.List;
 
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
-import com.oracle.truffle.api.frame.FrameDescriptor;
-import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 import ukr.lpu.cs.mj.MJNodeFactory;
+import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 
 public class MJMethodInvokeNode extends MJExpressionNode {
     private MJMethodBodyNode body;
@@ -27,14 +26,14 @@ public class MJMethodInvokeNode extends MJExpressionNode {
 
     @Override
     public Object execute(VirtualFrame frame) {
-        Object[] callArgs = new Object[args.size()];
-        for (int i = 0; i < callArgs.length; i++)
-            callArgs[i] = args.get(i).execute(frame);
+        Object[] callArgs = new Object[args.size() + 1];
+        callArgs[0] = frame.getArguments()[0];
+        for (int i = 1; i < callArgs.length; i++)
+            callArgs[i] = args.get(i - 1).execute(frame);
         RootCallTarget call = Truffle.getRuntime().createCallTarget(body);
         if (body.getRetType() == null)
             return call.call(callArgs);
         return MJNodeFactory.getSymbol(body.getRetType(), "", call.call(callArgs)).execute(frame);
-        // return body.execute(frame);
     }
 
 }

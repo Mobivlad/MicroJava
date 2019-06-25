@@ -2,7 +2,7 @@ package ukr.lpu.cs.mj.nodes.expressions.relations;
 
 import com.oracle.truffle.api.dsl.Specialization;
 
-import ukr.lpu.cs.mj.nodes.MJBinaryExpressionNode;
+import ukr.lpu.cs.mj.nodes.expressions.MJBinaryExpressionNode;
 
 public abstract class MJGreaterEqualsNode extends MJBinaryExpressionNode {
     @Specialization

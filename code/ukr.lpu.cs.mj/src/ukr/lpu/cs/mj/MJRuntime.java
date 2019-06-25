@@ -11,13 +11,13 @@ import ukr.lpu.cs.mj.parser.RecursiveDescentParser;
 
 public class MJRuntime {
     public static void main(String[] args) {
-        parseRD(whileLoopRD);
+        parseRD(mjTestRD);
     }
 
     static String mjTestRD = ""//
                     + "program Sample { "//
-                    + "void main() int i;{ \n"//
-                    + "i--; print(i);\n"//
+                    + "void main() double i;{ \n"//
+                    + "read(i); i=1.5; print(i);\n"//
                     + "}\n" //
                     + "}\n";
 

@@ -2,23 +2,46 @@ package ukr.lpu.cs.mj.nodes.statements;
 
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-import ukr.lpu.cs.mj.nodes.MJExpressionNode;
-import ukr.lpu.cs.mj.nodes.MJStatementNode;
-import ukr.lpu.cs.mj.nodes.MJSymbolNode;
+import ukr.lpu.cs.mj.nodes.MJVarValueNode;
+import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 
-@NodeChild(value = "symbol", type = MJExpressionNode.class)
-@NodeChild(value = "expression1", type = MJExpressionNode.class)
-@NodeChild(value = "expression2", type = MJExpressionNode.class)
+@NodeChild(value = "expression", type = MJExpressionNode.class)
 public abstract class MJDivAssignStatementNode extends MJStatementNode {
+    @Child MJVarValueNode var;
+    private static final String errorMessage = "Error #000: Lazy programmer";
 
-    @Specialization
-    public void doAssign(MJSymbolNode node, int value1, int value2) {
-        node.setResult(value1 / value2);
+    public MJDivAssignStatementNode(String varName) {
+        super();
+        this.var = new MJVarValueNode(varName);
     }
 
     @Specialization
-    public void doAssign(MJSymbolNode node, double value1, double value2) {
-        node.setResult(value1 / value2);
+    public void doAssign(VirtualFrame frame, int value) {
+        Object o = var.execute(frame);
+        if (o instanceof Integer) {
+            var.getSymbol(frame).setResult((int) o / value);
+            return;
+        }
+        if (o instanceof Double) {
+            var.getSymbol(frame).setResult((double) o / value);
+            return;
+        }
+        throw new Error(errorMessage);
+    }
+
+    @Specialization
+    public void doAssign(VirtualFrame frame, double value) {
+        Object o = var.execute(frame);
+        if (o instanceof Integer) {
+            var.getSymbol(frame).setResult((int) o / value);
+            return;
+        }
+        if (o instanceof Double) {
+            var.getSymbol(frame).setResult((double) o / value);
+            return;
+        }
+        throw new Error(errorMessage);
     }
 }

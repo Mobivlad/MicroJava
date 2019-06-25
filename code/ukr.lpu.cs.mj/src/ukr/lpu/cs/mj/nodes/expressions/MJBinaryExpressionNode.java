@@ -1,4 +1,4 @@
-package ukr.lpu.cs.mj.nodes;
+package ukr.lpu.cs.mj.nodes.expressions;
 
 import com.oracle.truffle.api.dsl.NodeChild;
 

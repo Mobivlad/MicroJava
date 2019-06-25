@@ -7,10 +7,9 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.RepeatingNode;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
-import ukr.lpu.cs.mj.nodes.MJExpressionNode;
-import ukr.lpu.cs.mj.nodes.MJStatementNode;
 import ukr.lpu.cs.mj.nodes.exceptions.MJBreakException;
 import ukr.lpu.cs.mj.nodes.exceptions.MJContinueException;
+import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 
 public class MJWhileStatement extends MJStatementNode {
     @Child protected LoopNode loopNode;

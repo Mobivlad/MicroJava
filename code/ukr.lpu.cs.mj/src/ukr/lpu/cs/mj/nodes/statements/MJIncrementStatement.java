@@ -1,23 +1,31 @@
 package ukr.lpu.cs.mj.nodes.statements;
 
-import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.VirtualFrame;
 
-import ukr.lpu.cs.mj.nodes.MJExpressionNode;
-import ukr.lpu.cs.mj.nodes.MJStatementNode;
-import ukr.lpu.cs.mj.nodes.MJSymbolNode;
+import ukr.lpu.cs.mj.nodes.MJVarValueNode;
 
-@NodeChild(value = "symbol", type = MJExpressionNode.class)
-@NodeChild(value = "expression1", type = MJExpressionNode.class)
 public abstract class MJIncrementStatement extends MJStatementNode {
 
-    @Specialization
-    public void doAssign(MJSymbolNode node, int value1) {
-        node.setResult(value1 + 1);
+    @Child MJVarValueNode var;
+    private static final String errorMessage = "Error #000: Lazy programmer";
+
+    public MJIncrementStatement(String varName) {
+        super();
+        this.var = new MJVarValueNode(varName);
     }
 
     @Specialization
-    public void doAssign(MJSymbolNode node, double value1) {
-        node.setResult(value1 + 1);
+    public void doInc(VirtualFrame frame) {
+        Object o = var.execute(frame);
+        if (o instanceof Integer) {
+            var.getSymbol(frame).setResult((int) o + 1);
+            return;
+        }
+        if (o instanceof Double) {
+            var.getSymbol(frame).setResult((double) o + 1);
+            return;
+        }
+        throw new Error(errorMessage);
     }
 }

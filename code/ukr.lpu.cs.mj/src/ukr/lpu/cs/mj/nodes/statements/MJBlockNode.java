@@ -2,8 +2,6 @@ package ukr.lpu.cs.mj.nodes.statements;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import ukr.lpu.cs.mj.nodes.MJStatementNode;
-
 public class MJBlockNode extends MJStatementNode {
     @Children private final MJStatementNode[] bodyNodes;
 

@@ -1,5 +1,7 @@
 package ukr.lpu.cs.mj.nodes;
 
+import com.oracle.truffle.api.RootCallTarget;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -7,6 +9,10 @@ import com.oracle.truffle.api.nodes.RootNode;
 
 import ukr.lpu.cs.mj.MJNodeFactory;
 import ukr.lpu.cs.mj.MJNodeFactory.ValType;
+import ukr.lpu.cs.mj.nodes.symbols.MJDoubleSymbolNode;
+import ukr.lpu.cs.mj.nodes.symbols.MJIntSymbolNode;
+import ukr.lpu.cs.mj.nodes.symbols.MJStringSymbolNode;
+import ukr.lpu.cs.mj.nodes.symbols.MJSymbolNode;
 
 public class MJProgramNode extends RootNode {
 
@@ -20,30 +26,37 @@ public class MJProgramNode extends RootNode {
 
     @Override
     public Object execute(VirtualFrame frame) {
-        new MJMethodInvokeNode(getFunction("main")).execute(frame);
-        return null;
-        /*
-         * RootCallTarget call = Truffle.getRuntime().createCallTarget(getFunction("main")); return
-         * call.call();
-         */
+        RootCallTarget call = Truffle.getRuntime().createCallTarget(getFunction("main"));
+        return call.call(local);
     }
 
-    public void addVar(MJSymbolNode node) {
-        local.addFrameSlot(node.getSymbol(), node, FrameSlotKind.Object);
+    public void addVar(ValType type, String name) {
+        local.addFrameSlot(name, MJNodeFactory.getSymbol(type, name), FrameSlotKind.Object);
+    }
+
+    public void addVar(ValType type, String name, Object value) {
+        MJSymbolNode symbol = MJNodeFactory.getSymbol(type, name);
+        switch (type) {
+            case INT:
+                ((MJIntSymbolNode) symbol).setResult(value);
+                break;
+            case DOUBLE:
+                ((MJDoubleSymbolNode) symbol).setResult(value);
+                break;
+            case STRING:
+                ((MJStringSymbolNode) symbol).setResult(value);
+                break;
+            default:
+                break;
+        }
+        symbol.startBeConstant();
+        local.addFrameSlot(name, symbol, FrameSlotKind.Object);
     }
 
     public void addVars(ValType type, String args[]) {
-        for (String s : args) {
-            local.addFrameSlot(s, MJNodeFactory.getSymbol(type, s), FrameSlotKind.Object);
+        for (int i = 0; i < args.length; i++) {
+            addVar(type, args[i]);
         }
-    }
-
-    public void addConstant(MJSymbolNode var) {
-        local.addFrameSlot(var.getSymbol(), var, FrameSlotKind.Object);
-    }
-
-    public boolean consistVar(String name) {
-        return local.findFrameSlot(name) != null;
     }
 
     public MJMethodBodyNode getFunction(String name) {

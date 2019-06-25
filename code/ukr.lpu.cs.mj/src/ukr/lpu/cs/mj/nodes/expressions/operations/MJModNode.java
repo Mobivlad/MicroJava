@@ -2,7 +2,7 @@ package ukr.lpu.cs.mj.nodes.expressions.operations;
 
 import com.oracle.truffle.api.dsl.Specialization;
 
-import ukr.lpu.cs.mj.nodes.MJBinaryExpressionNode;
+import ukr.lpu.cs.mj.nodes.expressions.MJBinaryExpressionNode;
 
 public abstract class MJModNode extends MJBinaryExpressionNode {
     @Specialization

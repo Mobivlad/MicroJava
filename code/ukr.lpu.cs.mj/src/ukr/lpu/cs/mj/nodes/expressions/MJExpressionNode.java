@@ -1,9 +1,10 @@
-package ukr.lpu.cs.mj.nodes;
+package ukr.lpu.cs.mj.nodes.expressions;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 
 import ukr.lpu.cs.mj.MJTypesGen;
+import ukr.lpu.cs.mj.nodes.statements.MJStatementNode;
 
 public abstract class MJExpressionNode extends MJStatementNode {
     public abstract Object execute(VirtualFrame frame);

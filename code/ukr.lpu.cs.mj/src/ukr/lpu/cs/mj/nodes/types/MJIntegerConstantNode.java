@@ -1,7 +1,8 @@
 package ukr.lpu.cs.mj.nodes.types;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
-import ukr.lpu.cs.mj.nodes.MJUnaryExpressionNode;
+
+import ukr.lpu.cs.mj.nodes.expressions.MJUnaryExpressionNode;
 
 public class MJIntegerConstantNode extends MJUnaryExpressionNode {
     private final int x;

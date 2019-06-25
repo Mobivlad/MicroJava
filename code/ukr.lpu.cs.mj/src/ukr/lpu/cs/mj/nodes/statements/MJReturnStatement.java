@@ -2,9 +2,8 @@ package ukr.lpu.cs.mj.nodes.statements;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import ukr.lpu.cs.mj.nodes.MJExpressionNode;
-import ukr.lpu.cs.mj.nodes.MJStatementNode;
 import ukr.lpu.cs.mj.nodes.exceptions.MJReturnException;
+import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 
 public class MJReturnStatement extends MJStatementNode {
     @Child private MJExpressionNode valueNode;

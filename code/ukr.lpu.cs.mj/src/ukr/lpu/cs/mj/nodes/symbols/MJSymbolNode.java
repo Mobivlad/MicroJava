@@ -1,4 +1,6 @@
-package ukr.lpu.cs.mj.nodes;
+package ukr.lpu.cs.mj.nodes.symbols;
+
+import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 
 public abstract class MJSymbolNode extends MJExpressionNode {
     protected final String symbol;

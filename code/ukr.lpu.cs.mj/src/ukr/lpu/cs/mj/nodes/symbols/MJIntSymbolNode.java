@@ -2,8 +2,6 @@ package ukr.lpu.cs.mj.nodes.symbols;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-import ukr.lpu.cs.mj.nodes.MJSymbolNode;
-
 public class MJIntSymbolNode extends MJSymbolNode {
     public MJIntSymbolNode(String symbol) {
         super(symbol);

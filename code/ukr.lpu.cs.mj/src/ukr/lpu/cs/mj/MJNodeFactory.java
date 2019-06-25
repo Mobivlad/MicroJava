@@ -1,8 +1,6 @@
 package ukr.lpu.cs.mj;
 
-import ukr.lpu.cs.mj.nodes.MJExpressionNode;
-import ukr.lpu.cs.mj.nodes.MJStatementNode;
-import ukr.lpu.cs.mj.nodes.MJSymbolNode;
+import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 import ukr.lpu.cs.mj.nodes.expressions.operations.MJAddNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.operations.MJDivNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.operations.MJModNodeGen;
@@ -18,6 +16,7 @@ import ukr.lpu.cs.mj.nodes.statements.*;
 import ukr.lpu.cs.mj.nodes.symbols.MJDoubleSymbolNode;
 import ukr.lpu.cs.mj.nodes.symbols.MJIntSymbolNode;
 import ukr.lpu.cs.mj.nodes.symbols.MJStringSymbolNode;
+import ukr.lpu.cs.mj.nodes.symbols.MJSymbolNode;
 import ukr.lpu.cs.mj.parser.RecursiveDescentParser.CompOp;
 import ukr.lpu.cs.mj.parser.RecursiveDescentParser.OpCode;
 
@@ -123,20 +122,20 @@ public class MJNodeFactory {
         return null;
     }
 
-    public static MJStatementNode getAssignStatement(OpCode op, MJExpressionNode symbol, MJExpressionNode... args) {
+    public static MJStatementNode getAssignStatement(OpCode op, String name, MJExpressionNode... args) {
         switch (op) {
             case store:
-                return MJAssignStatementNodeGen.create(symbol, args[0]);
+                return MJAssignStatementNodeGen.create(name, args[0]);
             case add:
-                return MJAddAssignStatementNodeGen.create(symbol, args[1], args[0]);
+                return MJAddAssignStatementNodeGen.create(name, args[0]);
             case sub:
-                return MJSubAssignStatementNodeGen.create(symbol, args[1], args[0]);
-            case mul:
-                return MJMulAssignStatementNodeGen.create(symbol, args[1], args[0]);
+                return MJSubAssignStatementNodeGen.create(name, args[0]);
             case div:
-                return MJDivAssignStatementNodeGen.create(symbol, args[1], args[0]);
+                return MJDivAssignStatementNodeGen.create(name, args[0]);
+            case mul:
+                return MJMulAssignStatementNodeGen.create(name, args[0]);
             case rem:
-                return MJRemAssignStatementNodeGen.create(symbol, args[1], args[0]);
+                return MJRemAssignStatementNodeGen.create(name, args[0]);
             default:
                 break;
         }
