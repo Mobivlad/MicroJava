@@ -11,7 +11,7 @@ import ukr.lpu.cs.mj.parser.RecursiveDescentParser;
 
 public class MJRuntime {
     public static void main(String[] args) {
-        parseRD(mjTestRD);
+        parseRD(divAlgorithm);
     }
 
     static String mjTestRD = ""//

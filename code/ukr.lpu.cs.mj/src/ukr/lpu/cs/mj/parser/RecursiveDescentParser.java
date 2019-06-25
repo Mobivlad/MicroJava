@@ -383,6 +383,7 @@ public final class RecursiveDescentParser {
             List<String> names = new ArrayList<>();
             method.addVars(VarDecl(names), names.toArray(new String[names.size()]));
         }
+        method.create();
         method.setBody(Block());
         currentMethod = null;
     }
