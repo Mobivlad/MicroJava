@@ -1,5 +1,7 @@
 package ukr.lpu.cs.mj.nodes;
 
+import com.oracle.truffle.api.RootCallTarget;
+import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
@@ -20,26 +22,37 @@ public class MJProgramNode extends RootNode {
 
     @Override
     public Object execute(VirtualFrame frame) {
-        new MJMethodInvokeNode(getFunction("main")).execute(frame);
-        return null;
         /*
-         * RootCallTarget call = Truffle.getRuntime().createCallTarget(getFunction("main")); return
-         * call.call();
+         * new MJMethodInvokeNode(getFunction("main")).execute(frame); return null;
          */
-    }
-
-    public void addVar(MJSymbolNode node) {
-        local.addFrameSlot(node.getSymbol(), node, FrameSlotKind.Object);
+        System.out.println(frame);
+        RootCallTarget call = Truffle.getRuntime().createCallTarget(getFunction("main"));
+        return call.call(frame);
     }
 
     public void addVars(ValType type, String args[]) {
         for (String s : args) {
-            local.addFrameSlot(s, MJNodeFactory.getSymbol(type, s), FrameSlotKind.Object);
+            switch (type) {
+                case INT:
+                    local.addFrameSlot(s, FrameSlotKind.Int);
+                    break;
+                case DOUBLE:
+                    local.addFrameSlot(s, FrameSlotKind.Double);
+                    break;
+                case STRING:
+                    local.addFrameSlot(s, FrameSlotKind.Object);
+                    break;
+            }
         }
     }
 
-    public void addConstant(MJSymbolNode var) {
-        local.addFrameSlot(var.getSymbol(), var, FrameSlotKind.Object);
+    public void addConstant(String name, ValType t, Object val) {
+        if (t == ValType.INT)
+            local.addFrameSlot(name, val, FrameSlotKind.Int);
+        if (t == ValType.DOUBLE)
+            local.addFrameSlot(name, val, FrameSlotKind.Double);
+        if (t == ValType.STRING)
+            local.addFrameSlot(name, val, FrameSlotKind.Object);
     }
 
     public boolean consistVar(String name) {

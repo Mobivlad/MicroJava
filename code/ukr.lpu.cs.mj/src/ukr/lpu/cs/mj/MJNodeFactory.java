@@ -2,7 +2,6 @@ package ukr.lpu.cs.mj;
 
 import ukr.lpu.cs.mj.nodes.MJExpressionNode;
 import ukr.lpu.cs.mj.nodes.MJStatementNode;
-import ukr.lpu.cs.mj.nodes.MJSymbolNode;
 import ukr.lpu.cs.mj.nodes.expressions.operations.MJAddNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.operations.MJDivNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.operations.MJModNodeGen;
@@ -61,49 +60,21 @@ public class MJNodeFactory {
         }
     }
 
-    public static MJSymbolNode getSymbol(ValType t, String name, Object value) {
-        switch (t) {
-            case INT: {
-                MJIntSymbolNode ret = new MJIntSymbolNode(name);
-                ret.setResult(value);
-                return ret;
-            }
-            case DOUBLE: {
-                MJDoubleSymbolNode ret = new MJDoubleSymbolNode(name);
-                ret.setResult(value);
-                return ret;
-            }
-            case STRING: {
-                MJStringSymbolNode ret = new MJStringSymbolNode(name);
-                ret.setResult(value);
-                return ret;
-            }
-            default:
-                return null;
-        }
-    }
+    /*
+     * public static MJSymbolNode getSymbol(ValType t, String name, Object value) { switch (t) {
+     * case INT: { MJIntSymbolNode ret = new MJIntSymbolNode(name); ret.setResult(value); return
+     * ret; } case DOUBLE: { MJDoubleSymbolNode ret = new MJDoubleSymbolNode(name);
+     * ret.setResult(value); return ret; } case STRING: { MJStringSymbolNode ret = new
+     * MJStringSymbolNode(name); ret.setResult(value); return ret; } default: return null; } }
+     */
 
-    public static MJSymbolNode getSymbol(ValType t, String name) {
-        switch (t) {
-            case INT: {
-                MJIntSymbolNode ret = new MJIntSymbolNode(name);
-                ret.setResult(0);
-                return ret;
-            }
-            case DOUBLE: {
-                MJDoubleSymbolNode ret = new MJDoubleSymbolNode(name);
-                ret.setResult(0.0);
-                return ret;
-            }
-            case STRING: {
-                MJStringSymbolNode ret = new MJStringSymbolNode(name);
-                ret.setResult("");
-                return ret;
-            }
-            default:
-                return null;
-        }
-    }
+    /*
+     * public static MJSymbolNode getSymbol(ValType t, String name) { switch (t) { case INT: {
+     * MJIntSymbolNode ret = new MJIntSymbolNode(name); ret.setResult(0); return ret; } case DOUBLE:
+     * { MJDoubleSymbolNode ret = new MJDoubleSymbolNode(name); ret.setResult(0.0); return ret; }
+     * case STRING: { MJStringSymbolNode ret = new MJStringSymbolNode(name); ret.setResult("");
+     * return ret; } default: return null; } }
+     */
 
     public static MJExpressionNode getOpExpression(OpCode op, MJExpressionNode... args) {
         switch (op) {
@@ -123,23 +94,15 @@ public class MJNodeFactory {
         return null;
     }
 
-    public static MJStatementNode getAssignStatement(OpCode op, MJExpressionNode symbol, MJExpressionNode... args) {
-        switch (op) {
-            case store:
-                return MJAssignStatementNodeGen.create(symbol, args[0]);
-            case add:
-                return MJAddAssignStatementNodeGen.create(symbol, args[1], args[0]);
-            case sub:
-                return MJSubAssignStatementNodeGen.create(symbol, args[1], args[0]);
-            case mul:
-                return MJMulAssignStatementNodeGen.create(symbol, args[1], args[0]);
-            case div:
-                return MJDivAssignStatementNodeGen.create(symbol, args[1], args[0]);
-            case rem:
-                return MJRemAssignStatementNodeGen.create(symbol, args[1], args[0]);
-            default:
-                break;
-        }
-        return null;
-    }
+    /*
+     * public static MJStatementNode getAssignStatement(OpCode op, MJExpressionNode symbol,
+     * MJExpressionNode... args) { switch (op) { case store: return
+     * MJAssignStatementNodeGen.create(symbol, args[0]);
+     *
+     * case add: return MJAddAssignStatementNodeGen.create(symbol, args[1], args[0]); case sub:
+     * return MJSubAssignStatementNodeGen.create(symbol, args[1], args[0]); case mul: return
+     * MJMulAssignStatementNodeGen.create(symbol, args[1], args[0]); case div: return
+     * MJDivAssignStatementNodeGen.create(symbol, args[1], args[0]); case rem: return
+     * MJRemAssignStatementNodeGen.create(symbol, args[1], args[0]); default: break; }return null;}
+     */
 }

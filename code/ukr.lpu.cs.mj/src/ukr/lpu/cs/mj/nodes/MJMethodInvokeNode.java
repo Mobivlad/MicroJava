@@ -27,30 +27,15 @@ public class MJMethodInvokeNode extends MJExpressionNode {
 
     @Override
     public Object execute(VirtualFrame frame) {
-        FrameDescriptor f = getDesc();
-        Object[] callArgs = new Object[args.size()];
-        for (int i = 0; i < callArgs.length; i++)
-            callArgs[i] = args.get(i).execute(frame);
-        int i = 0;
-        for (String s : body.getArgumentsDesc().keySet()) {
-            f.addFrameSlot(s, MJNodeFactory.getSymbol(body.getArgumentsDesc().get(s), s, callArgs[i]), FrameSlotKind.Object);
-            i++;
-        }
-        body.setLocal(f);
+        Object[] callArgs = new Object[args.size() + 1];
+        callArgs[0] = frame.getArguments()[0];
+        for (int i = 1; i < callArgs.length; i++)
+            callArgs[i] = args.get(i - 1).execute(frame);
+        RootCallTarget call = Truffle.getRuntime().createCallTarget(body);
         /*
-         * RootCallTarget call = Truffle.getRuntime().createCallTarget(body); if (body.getRetType()
-         * == null) return call.call(); return MJNodeFactory.getSymbol(body.getRetType(), "",
-         * call.call()).execute(frame);
+         * if (body.getRetType()== null) return call.call(); return
+         * MJNodeFactory.getSymbol(body.getRetType(), "",call.call()).execute(frame);
          */
-        return body.execute(frame);
+        return call.call(callArgs);
     }
-
-    private FrameDescriptor getDesc() {
-        FrameDescriptor f = new FrameDescriptor();
-        for (String s : body.getLocalDesc().keySet()) {
-            f.addFrameSlot(s, MJNodeFactory.getSymbol(body.getLocalDesc().get(s), s), FrameSlotKind.Object);
-        }
-        return f;
-    }
-
 }
