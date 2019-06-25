@@ -54,15 +54,18 @@ import ukr.lpu.cs.mj.nodes.MJMethodBodyNode;
 import ukr.lpu.cs.mj.nodes.MJMethodInvokeNode;
 import ukr.lpu.cs.mj.nodes.MJProgramNode;
 import ukr.lpu.cs.mj.nodes.MJStatementNode;
+import ukr.lpu.cs.mj.nodes.MJSymbolNode;
+import ukr.lpu.cs.mj.nodes.MJVarRefNode;
 import ukr.lpu.cs.mj.nodes.MJVarValueNode;
 import ukr.lpu.cs.mj.nodes.expressions.operations.*;
-import ukr.lpu.cs.mj.nodes.statements.MJAssignStatementNode;
 import ukr.lpu.cs.mj.nodes.statements.MJBlockNode;
 import ukr.lpu.cs.mj.nodes.statements.MJBreakStatement;
 import ukr.lpu.cs.mj.nodes.statements.MJBreakStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJContinueStatement;
 import ukr.lpu.cs.mj.nodes.statements.MJContinueStatementNodeGen;
+import ukr.lpu.cs.mj.nodes.statements.MJDecrementStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJIfNodeGen;
+import ukr.lpu.cs.mj.nodes.statements.MJIncrementStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJPrintNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJReadStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJReturnStatement;
@@ -282,7 +285,7 @@ public final class RecursiveDescentParser {
         check(ident);
         for (;;) {
             if (sym == final_) {
-                // prog.addVar(ConstDecl());
+                prog.addVar(ConstDecl());
             } else if (sym == ident) {
                 List<String> args = new ArrayList<>();
                 prog.addVars(VarDecl(args), args.toArray(new String[args.size()]));
@@ -305,14 +308,28 @@ public final class RecursiveDescentParser {
     }
 
     /** ConstDecl = "final" Type ident "=" ( number | charConst ) ";" . */
-    /*
-     * private void ConstDecl() { check(final_); ValType type = Type(); check(ident); MJSymbolNode
-     * constVal = MJNodeFactory.getSymbol(type, t.str); check(assign); if (sym == number) { scan();
-     * constVal.setResult(t.val); } else if (sym == doublenumber) { scan();
-     * constVal.setResult(t.dval); } else if (sym == stringConst) { scan();
-     * constVal.setResult(t.str); } else { throw new Error("Constant declaration"); }
-     * constVal.startBeConstant(); check(semicolon); return constVal; }
-     */
+    private MJSymbolNode ConstDecl() {
+        check(final_);
+        ValType type = Type();
+        check(ident);
+        MJSymbolNode constVal = MJNodeFactory.getSymbol(type, t.str);
+        check(assign);
+        if (sym == number) {
+            scan();
+            constVal.setResult(t.val);
+        } else if (sym == doublenumber) {
+            scan();
+            constVal.setResult(t.dval);
+        } else if (sym == stringConst) {
+            scan();
+            constVal.setResult(t.str);
+        } else {
+            throw new Error("Constant declaration");
+        }
+        constVal.startBeConstant();
+        check(semicolon);
+        return constVal;
+    }
 
     /** VarDecl = Type ident { "," ident } ";" . */
     private ValType VarDecl(List<String> args) {
@@ -366,7 +383,6 @@ public final class RecursiveDescentParser {
             List<String> names = new ArrayList<>();
             method.addVars(VarDecl(names), names.toArray(new String[names.size()]));
         }
-        method.create();
         method.setBody(Block());
         currentMethod = null;
     }
@@ -429,7 +445,7 @@ public final class RecursiveDescentParser {
      * | ";" .
      */
     private MJStatementNode Statement() {
-        MJStatementNode res = null;
+        MJStatementNode res;
         switch (sym) {
             // ----- assignment, method call, in- or decrement
             // ----- Designator ( Assignop Expr | ActPars | "++" | "--" ) ";"
@@ -443,11 +459,9 @@ public final class RecursiveDescentParser {
                     case timesas:
                     case slashas:
                     case remas:
-                        // MJExpressionNode left = new MJVarRefNode(currentMethod, name);
+                        MJExpressionNode left = new MJVarRefNode(currentMethod, name);
                         OpCode code = Assignop();
-                        // res = MJNodeFactory.getAssignStatement(code, left, Expr(), new
-                        // MJVarValueNode(currentMethod, name));
-                        res = new MJAssignStatementNode(name, Expr());
+                        res = MJNodeFactory.getAssignStatement(code, left, Expr(), new MJVarValueNode(currentMethod, name));
                         break;
                     case lpar:
                         MJMethodBodyNode method = currentMethod.getProgram().getFunction(name);
@@ -455,18 +469,14 @@ public final class RecursiveDescentParser {
                         break;
                     case pplus: {
                         scan();
-                        /*
-                         * res = MJIncrementStatementNodeGen.create( new MJVarRefNode(currentMethod,
-                         * name), new MJVarValueNode(currentMethod, name));
-                         */
+                        res = MJIncrementStatementNodeGen.create(
+                                        new MJVarRefNode(currentMethod, name),
+                                        new MJVarValueNode(currentMethod, name));
                         break;
                     }
                     case mminus: {
                         scan();
-                        /*
-                         * res = MJDecrementStatementNodeGen.create( new MJVarRefNode(currentMethod,
-                         * name), new MJVarValueNode(currentMethod, name));
-                         */
+                        res = MJDecrementStatementNodeGen.create(new MJVarRefNode(currentMethod, name), new MJVarValueNode(currentMethod, name));
                         break;
                     }
                     default:
@@ -527,10 +537,10 @@ public final class RecursiveDescentParser {
                 scan();
                 check(lpar);
                 String name = Designator();
-                // MJExpressionNode left = new MJVarRefNode(currentMethod, name);
+                MJExpressionNode left = new MJVarRefNode(currentMethod, name);
                 check(rpar);
                 check(semicolon);
-                // return MJReadStatementNodeGen.create(left);
+                return MJReadStatementNodeGen.create(left);
                 // break;
             }
             // ----- "print" "(" Expr [ comma number ] ")" ";"
@@ -650,7 +660,7 @@ public final class RecursiveDescentParser {
                     MJMethodInvokeNode invoke = new MJMethodInvokeNode(method, ActPars());
                     return invoke;
                 } else {
-                    return new MJVarValueNode(name);
+                    return new MJVarValueNode(currentMethod, name);
                 }
                 // break;
             case number:

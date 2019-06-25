@@ -4,15 +4,12 @@ import java.util.HashMap;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlot;
-import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
-
-import ukr.lpu.cs.mj.MJNodeFactory;
 import ukr.lpu.cs.mj.MJNodeFactory.ValType;
 import ukr.lpu.cs.mj.nodes.exceptions.MJReturnException;
 
-public class MJMethodBodyNode extends RootNode {
+public class MJMethodBodyNode extends MJExpressionNode {
     private String methodName;
     private FrameDescriptor global;
     private MJProgramNode program;
@@ -27,41 +24,15 @@ public class MJMethodBodyNode extends RootNode {
     }
 
     public MJMethodBodyNode(ValType retType, String str, MJProgramNode program) {
-        super(null, new FrameDescriptor());
+        // super(null);
         this.program = program;
-        this.local = getFrameDescriptor();
         this.retType = retType;
         this.global = program.getFrameDescriptor();
         this.methodName = str;
     }
 
-    public void create() {
-        for (String s : desc.keySet()) {
-            switch (desc.get(s)) {
-                case INT:
-                    local.addFrameSlot(s, FrameSlotKind.Int);
-                    break;
-                case DOUBLE:
-                    local.addFrameSlot(s, FrameSlotKind.Double);
-                    break;
-                case STRING:
-                    local.addFrameSlot(s, FrameSlotKind.Object);
-                    break;
-            }
-        }
-        for (String s : arguments.keySet()) {
-            switch (arguments.get(s)) {
-                case INT:
-                    local.addFrameSlot(s, FrameSlotKind.Int);
-                    break;
-                case DOUBLE:
-                    local.addFrameSlot(s, FrameSlotKind.Double);
-                    break;
-                case STRING:
-                    local.addFrameSlot(s, FrameSlotKind.Object);
-                    break;
-            }
-        }
+    public void setLocal(FrameDescriptor local) {
+        this.local = local;
     }
 
     public HashMap<String, ValType> getLocalDesc() {
@@ -94,12 +65,6 @@ public class MJMethodBodyNode extends RootNode {
 
     @Override
     public Object execute(VirtualFrame frame) {
-        Object[] args = frame.getArguments();
-        int i = 1;
-        for (String s : arguments.keySet()) {
-            frame.setObject(local.findFrameSlot(s), args[i]);
-            i++;
-        }
         try {
             body.executeVoid(frame);
         } catch (MJReturnException ex) {
@@ -114,12 +79,19 @@ public class MJMethodBodyNode extends RootNode {
         }
     }
 
-    public void addVar(ValType type, String arg) {
-        desc.put(arg, type);
-    }
-
     public void addArg(ValType type, String arg) {
         arguments.put(arg, type);
+    }
+
+    public MJSymbolNode getVar(String name) {
+        FrameSlot f = local.findFrameSlot(name);
+        if (f == null)
+            f = global.findFrameSlot(name);
+        if (f == null) {
+            throw new Error("No variable with name '" + name + "'");
+        }
+        return (MJSymbolNode) f.getInfo();
+
     }
 
 }

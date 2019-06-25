@@ -15,13 +15,9 @@ public class MJRuntime {
     }
 
     static String mjTestRD = ""//
-                    + "program Sample int i;{ "//
-                    + "void f(int i,int j) {"//
-                    + "print(i); print(j);"//
-                    + "}"//
-                    + "void main() { \n"//
-                    + "f(1,2);"//
-                    + "f(5,4);"//
+                    + "program Sample { "//
+                    + "void main() int i;{ \n"//
+                    + "i--; print(i);\n"//
                     + "}\n" //
                     + "}\n";
 
