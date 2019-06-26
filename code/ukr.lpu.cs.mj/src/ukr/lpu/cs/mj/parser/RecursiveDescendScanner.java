@@ -35,7 +35,7 @@ public final class RecursiveDescendScanner {
         col = 0;
 
         nextCh(); // read 1st char into ch, incr col to 1
-        keywords = new HashMap<String, Token.Kind>();
+        keywords = new HashMap<>();
         keywords.put(Kind.break_.label(), Kind.break_);
         keywords.put(Kind.continue_.label(), Kind.continue_);
         keywords.put(Kind.class_.label(), Kind.class_);

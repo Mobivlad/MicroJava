@@ -1,16 +1,17 @@
 package ukr.lpu.cs.mj.nodes.statements;
 
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
-public class MJBlockNode extends MJStatementNode {
+public abstract class MJBlockNode extends MJStatementNode {
     @Children private final MJStatementNode[] bodyNodes;
 
     public MJBlockNode(MJStatementNode[] nodes) {
         this.bodyNodes = nodes;
     }
 
-    @Override
-    public void executeVoid(VirtualFrame frame) {
+    @Specialization
+    public void startBlock(VirtualFrame frame) {
         for (MJStatementNode node : bodyNodes) {
             if (node != null) {
                 node.executeVoid(frame);

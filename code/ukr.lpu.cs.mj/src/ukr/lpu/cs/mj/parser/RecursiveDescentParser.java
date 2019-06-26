@@ -21,6 +21,7 @@ import ukr.lpu.cs.mj.nodes.expressions.MJTernarIfNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.functions.MJFindExpressionNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.operations.*;
 import ukr.lpu.cs.mj.nodes.statements.MJBlockNode;
+import ukr.lpu.cs.mj.nodes.statements.MJBlockNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJBreakStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJContinueStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJDecrementStatementNodeGen;
@@ -29,13 +30,12 @@ import ukr.lpu.cs.mj.nodes.statements.MJIncrementStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJPrintNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJReadStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJReturnStatement;
+import ukr.lpu.cs.mj.nodes.statements.MJReturnStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJStatementNode;
-import ukr.lpu.cs.mj.nodes.statements.MJWhileStatement;
-import ukr.lpu.cs.mj.nodes.types.MJCharConstantNode;
+import ukr.lpu.cs.mj.nodes.statements.MJWhileStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.types.MJDoubleConstantNode;
 import ukr.lpu.cs.mj.nodes.types.MJIntegerConstantNode;
 import ukr.lpu.cs.mj.nodes.types.MJStringConstantNode;
-import ukr.lpu.cs.mj.parser.Token.Kind;
 
 public final class RecursiveDescentParser {
     /** Maximum number of global variables per program */
@@ -377,7 +377,7 @@ public final class RecursiveDescentParser {
     /** Block = "{" { Statement } "}" . */
     private MJBlockNode Block() {
         check(lbrace);
-        MJBlockNode a = new MJBlockNode(Statements());
+        MJBlockNode a = MJBlockNodeGen.create(Statements());
         check(rbrace);
         return a;
     }
@@ -467,7 +467,7 @@ public final class RecursiveDescentParser {
                 check(lpar);
                 MJExpressionNode cond = Condition();
                 check(rpar);
-                return new MJWhileStatement(cond, Statement());
+                return MJWhileStatementNodeGen.create(cond, Statement());
                 // break;
             }
             // ----- "break" ";"
@@ -491,7 +491,7 @@ public final class RecursiveDescentParser {
                     ex = Expr();
                     check(semicolon);
                 }
-                return new MJReturnStatement(ex);
+                return MJReturnStatementNodeGen.create(ex);
             // break;
             // ----- "read" "(" Designator ")" ";"
             case read: {
@@ -594,28 +594,20 @@ public final class RecursiveDescentParser {
     /** Status: OK */
     /** Term = Factor { Mulop Factor } . */
     private MJExpressionNode Term() {
-        // MJExpressionNode a = Factor();
-        MJExpressionNode a = Ternar();
+        MJExpressionNode a = Factor();
         while (sym == times || sym == slash || sym == rem) {
             OpCode opCode = Mulop();
-            a = MJNodeFactory.getOpExpression(opCode, a, Ternar());
+            a = MJNodeFactory.getOpExpression(opCode, a, Factor());
         }
         return a;
     }
 
-    private MJExpressionNode Ternar() {
-        MJExpressionNode a = Factor();
-        if (compDecl.contains(sym)) {
-            CompOp r = Relop();
-            MJExpressionNode b = Expr();
-            check(question);
-            MJExpressionNode _true = Expr();
-            check(colon);
-            MJExpressionNode _false = Expr();
-            a = MJTernarIfNodeGen.create(MJNodeFactory.getCompExpression(r, a, b), _true, _false);
-        }
-        return a;
-    }
+    /*
+     * private MJExpressionNode Ternar() { MJExpressionNode a = Factor(); if
+     * (compDecl.contains(sym)) { check(question); MJExpressionNode _true = Expr(); check(colon);
+     * MJExpressionNode _false = Expr(); a = MJTernarIfNodeGen.create(a, _true, _false); } return a;
+     * }
+     */
 
     /** Status: AVERAGE */
     /**
@@ -631,9 +623,7 @@ public final class RecursiveDescentParser {
             case ident:
                 String name = Designator();
                 if (sym == lpar) {
-                    MJMethodBodyNode method = currentMethod.getProgram().getFunction(name);
-                    MJMethodInvokeNode invoke = new MJMethodInvokeNode(method, ActPars());
-                    return invoke;
+                    return new MJMethodInvokeNode(currentMethod.getProgram().getFunction(name), ActPars());
                 } else {
                     return new MJVarValueNode(name);
                 }
@@ -649,10 +639,6 @@ public final class RecursiveDescentParser {
             case stringConst:
                 scan();
                 return new MJStringConstantNode(t.str);
-            // break;
-            case charConst:
-                scan();
-                return new MJCharConstantNode((char) t.val);
             // break;
             case new_:
                 scan();

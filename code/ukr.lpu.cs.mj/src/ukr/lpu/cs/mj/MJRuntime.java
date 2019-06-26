@@ -11,13 +11,13 @@ import ukr.lpu.cs.mj.parser.RecursiveDescentParser;
 
 public class MJRuntime {
     public static void main(String[] args) {
-        parseRD(mjTestRD);
+        parseRD(divAlgorithm);
     }
 
     static String mjTestRD = ""//
                     + "program Sample { "//
                     + "void main() int i;{ \n"//
-                    + "i=find(\"hello\",\"ll\");  "//
+                    + "i=find(\"hel1.0lo\",1.1);  "//
                     + "print(i);\n"//
                     + "}\n" //
                     + "}\n";
@@ -118,6 +118,7 @@ public class MJRuntime {
         RecursiveDescendScanner scanner = new RecursiveDescendScanner(new InputStreamReader(is));
         RecursiveDescentParser parser = new RecursiveDescentParser(scanner);
         RootCallTarget call = parser.parse();
+        call.call();
         call.call();
     }
 }

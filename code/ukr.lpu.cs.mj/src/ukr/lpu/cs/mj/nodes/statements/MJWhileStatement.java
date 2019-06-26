@@ -1,6 +1,7 @@
 package ukr.lpu.cs.mj.nodes.statements;
 
 import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.LoopNode;
 import com.oracle.truffle.api.nodes.Node;
@@ -11,15 +12,15 @@ import ukr.lpu.cs.mj.nodes.exceptions.MJBreakException;
 import ukr.lpu.cs.mj.nodes.exceptions.MJContinueException;
 import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 
-public class MJWhileStatement extends MJStatementNode {
+public abstract class MJWhileStatement extends MJStatementNode {
     @Child protected LoopNode loopNode;
 
     public MJWhileStatement(MJExpressionNode conditionNode, MJStatementNode blockNode) {
         loopNode = Truffle.getRuntime().createLoopNode(new RepeatingWhileNode(conditionNode, blockNode));
     }
 
-    @Override
-    public void executeVoid(VirtualFrame frame) {
+    @Specialization
+    public void doLoop(VirtualFrame frame) {
         loopNode.executeLoop(frame);
     }
 

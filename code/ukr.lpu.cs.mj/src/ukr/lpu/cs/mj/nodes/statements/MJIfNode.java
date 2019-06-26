@@ -42,11 +42,13 @@ public abstract class MJIfNode extends MJStatementNode {
             thenProfile.enter();
             thenPartNode.executeVoid(frame);
         } else {
-            if (CompilerDirectives.inInterpreter()) {
-                elseCount++;
+            if (elsePartNode != null) {
+                if (CompilerDirectives.inInterpreter()) {
+                    elseCount++;
+                }
+                elseProfile.enter();
+                elsePartNode.executeVoid(frame);
             }
-            elseProfile.enter();
-            elsePartNode.executeVoid(frame);
         }
         /*
          * if (condition) { thenPartNode.executeVoid(frame); } else { if (elsePartNode != null)
