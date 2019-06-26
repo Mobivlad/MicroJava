@@ -185,6 +185,14 @@ public final class RecursiveDescendScanner {
                 t.kind = Kind.rpar;
                 nextCh();
                 break;
+            case '?':
+                t.kind = Kind.question;
+                nextCh();
+                break;
+            case ':':
+                t.kind = Kind.colon;
+                nextCh();
+                break;
             case '[':
                 t.kind = Kind.lbrack;
                 nextCh();

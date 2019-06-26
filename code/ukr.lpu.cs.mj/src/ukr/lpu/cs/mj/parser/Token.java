@@ -35,6 +35,8 @@ public class Token {
 		remas("%="),
 		pplus("++"),
 		mminus("--"),
+		question("?"),
+		colon(":"),
 		semicolon(";"),
 		comma(","),
 		period("."),

@@ -1,41 +1,6 @@
 package ukr.lpu.cs.mj.parser;
 
-import static ukr.lpu.cs.mj.parser.Token.Kind.and;
-import static ukr.lpu.cs.mj.parser.Token.Kind.doublenumber;
-import static ukr.lpu.cs.mj.parser.Token.Kind.stringConst;
-import static ukr.lpu.cs.mj.parser.Token.Kind.assign;
-import static ukr.lpu.cs.mj.parser.Token.Kind.break_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.charConst;
-import static ukr.lpu.cs.mj.parser.Token.Kind.class_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.comma;
-import static ukr.lpu.cs.mj.parser.Token.Kind.continue_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.else_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.eof;
-import static ukr.lpu.cs.mj.parser.Token.Kind.final_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.ident;
-import static ukr.lpu.cs.mj.parser.Token.Kind.if_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.lbrace;
-import static ukr.lpu.cs.mj.parser.Token.Kind.lbrack;
-import static ukr.lpu.cs.mj.parser.Token.Kind.lpar;
-import static ukr.lpu.cs.mj.parser.Token.Kind.minus;
-import static ukr.lpu.cs.mj.parser.Token.Kind.new_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.number;
-import static ukr.lpu.cs.mj.parser.Token.Kind.or;
-import static ukr.lpu.cs.mj.parser.Token.Kind.period;
-import static ukr.lpu.cs.mj.parser.Token.Kind.plus;
-import static ukr.lpu.cs.mj.parser.Token.Kind.print;
-import static ukr.lpu.cs.mj.parser.Token.Kind.program;
-import static ukr.lpu.cs.mj.parser.Token.Kind.rbrace;
-import static ukr.lpu.cs.mj.parser.Token.Kind.rbrack;
-import static ukr.lpu.cs.mj.parser.Token.Kind.read;
-import static ukr.lpu.cs.mj.parser.Token.Kind.rem;
-import static ukr.lpu.cs.mj.parser.Token.Kind.return_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.rpar;
-import static ukr.lpu.cs.mj.parser.Token.Kind.semicolon;
-import static ukr.lpu.cs.mj.parser.Token.Kind.slash;
-import static ukr.lpu.cs.mj.parser.Token.Kind.times;
-import static ukr.lpu.cs.mj.parser.Token.Kind.void_;
-import static ukr.lpu.cs.mj.parser.Token.Kind.while_;
+import static ukr.lpu.cs.mj.parser.Token.Kind.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,11 +17,10 @@ import ukr.lpu.cs.mj.nodes.MJMethodInvokeNode;
 import ukr.lpu.cs.mj.nodes.MJProgramNode;
 import ukr.lpu.cs.mj.nodes.MJVarValueNode;
 import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
+import ukr.lpu.cs.mj.nodes.expressions.MJTernarIfNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.operations.*;
 import ukr.lpu.cs.mj.nodes.statements.MJBlockNode;
-import ukr.lpu.cs.mj.nodes.statements.MJBreakStatement;
 import ukr.lpu.cs.mj.nodes.statements.MJBreakStatementNodeGen;
-import ukr.lpu.cs.mj.nodes.statements.MJContinueStatement;
 import ukr.lpu.cs.mj.nodes.statements.MJContinueStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJDecrementStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJIfNodeGen;
@@ -66,11 +30,11 @@ import ukr.lpu.cs.mj.nodes.statements.MJReadStatementNodeGen;
 import ukr.lpu.cs.mj.nodes.statements.MJReturnStatement;
 import ukr.lpu.cs.mj.nodes.statements.MJStatementNode;
 import ukr.lpu.cs.mj.nodes.statements.MJWhileStatement;
-import ukr.lpu.cs.mj.nodes.symbols.MJSymbolNode;
 import ukr.lpu.cs.mj.nodes.types.MJCharConstantNode;
 import ukr.lpu.cs.mj.nodes.types.MJDoubleConstantNode;
 import ukr.lpu.cs.mj.nodes.types.MJIntegerConstantNode;
 import ukr.lpu.cs.mj.nodes.types.MJStringConstantNode;
+import ukr.lpu.cs.mj.parser.Token.Kind;
 
 public final class RecursiveDescentParser {
     /** Maximum number of global variables per program */
@@ -103,6 +67,7 @@ public final class RecursiveDescentParser {
         firstExpr = EnumSet.of(ident, number, charConst, minus, lpar, new_);
         firstStat = EnumSet.of(ident, semicolon, lbrace, break_, continue_, if_, print, read, return_, while_);
         firstMethodDecl = EnumSet.of(void_, ident);
+        compDecl = EnumSet.of(eql, neq, lss, leq, gtr, geq);
     }
 
     public static enum CompOp {
@@ -252,7 +217,7 @@ public final class RecursiveDescentParser {
     }
 
     /** Sets of starting tokens for some productions. */
-    private EnumSet<Token.Kind> firstExpr, firstStat, firstMethodDecl;
+    private EnumSet<Token.Kind> firstExpr, firstStat, firstMethodDecl, compDecl;
 
     /** Reads ahead one symbol. */
     private void scan() {
@@ -628,10 +593,25 @@ public final class RecursiveDescentParser {
     /** Status: OK */
     /** Term = Factor { Mulop Factor } . */
     private MJExpressionNode Term() {
-        MJExpressionNode a = Factor();
+        // MJExpressionNode a = Factor();
+        MJExpressionNode a = Ternar();
         while (sym == times || sym == slash || sym == rem) {
             OpCode opCode = Mulop();
-            a = MJNodeFactory.getOpExpression(opCode, a, Factor());
+            a = MJNodeFactory.getOpExpression(opCode, a, Ternar());
+        }
+        return a;
+    }
+
+    private MJExpressionNode Ternar() {
+        MJExpressionNode a = Factor();
+        if (compDecl.contains(sym)) {
+            CompOp r = Relop();
+            MJExpressionNode b = Expr();
+            check(question);
+            MJExpressionNode _true = Expr();
+            check(colon);
+            MJExpressionNode _false = Expr();
+            a = MJTernarIfNodeGen.create(MJNodeFactory.getCompExpression(r, a, b), _true, _false);
         }
         return a;
     }
