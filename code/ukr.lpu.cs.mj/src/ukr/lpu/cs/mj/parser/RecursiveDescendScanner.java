@@ -46,6 +46,7 @@ public final class RecursiveDescendScanner {
         keywords.put(Kind.print.label(), Kind.print);
         keywords.put(Kind.program.label(), Kind.program);
         keywords.put(Kind.read.label(), Kind.read);
+        keywords.put(Kind.find.label(), Kind.find);
         keywords.put(Kind.return_.label(), Kind.return_);
         keywords.put(Kind.void_.label(), Kind.void_);
         keywords.put(Kind.while_.label(), Kind.while_);

@@ -54,6 +54,7 @@ public class Token {
 		if_("if"),
 		new_("new"),
 		print("print"),
+		find("find"),
 		program("program"),
 		read("read"),
 		return_("return"),
