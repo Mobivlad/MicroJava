@@ -1,5 +1,9 @@
 package ukr.lpu.cs.mj.nodes;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.oracle.truffle.api.CompilerAsserts;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.frame.FrameDescriptor;
@@ -16,7 +20,7 @@ import ukr.lpu.cs.mj.nodes.symbols.MJSymbolNode;
 
 public class MJProgramNode extends RootNode {
 
-    private FrameDescriptor functionmap = new FrameDescriptor();
+    private final Map<String, MJMethodBodyNode> functionmap = new HashMap<>();
     private FrameDescriptor local;
 
     public MJProgramNode() {
@@ -60,14 +64,17 @@ public class MJProgramNode extends RootNode {
     }
 
     public MJMethodBodyNode getFunction(String name) {
-        if (functionmap.findFrameSlot(name) == null) {
+        CompilerAsserts.neverPartOfCompilation();
+        MJMethodBodyNode method = functionmap.get(name);
+        if (method == null) {
             throw new Error("No method with name '" + name + "'");
         }
-        return (MJMethodBodyNode) functionmap.findFrameSlot(name).getInfo();
+        return method;
     }
 
     public void addFunction(MJMethodBodyNode node) {
-        functionmap.addFrameSlot(node.getMethodName(), node, FrameSlotKind.Object);
+        CompilerAsserts.neverPartOfCompilation();
+        functionmap.put(node.getMethodName(), node);
     }
 
 }

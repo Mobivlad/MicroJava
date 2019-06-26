@@ -2,12 +2,10 @@ package ukr.lpu.cs.mj.nodes.statements;
 
 import java.util.Scanner;
 
-import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 
 import ukr.lpu.cs.mj.nodes.MJVarValueNode;
-import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 import ukr.lpu.cs.mj.nodes.symbols.MJSymbolNode;
 
 public abstract class MJReadStatement extends MJStatementNode {
@@ -30,7 +28,8 @@ public abstract class MJReadStatement extends MJStatementNode {
             return;
         }
         if (o instanceof Double) {
-            symbol.setResult(s.nextDouble());
+            String _val = s.next();
+            symbol.setResult(Double.parseDouble(_val.replaceAll(",", ".")));
             return;
         }
         if (o instanceof String) {
