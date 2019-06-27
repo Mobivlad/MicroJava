@@ -6,27 +6,27 @@ import ukr.lpu.cs.mj.nodes.expressions.MJBinaryExpressionNode;
 
 public abstract class MJNotEqualsNode extends MJBinaryExpressionNode {
     @Specialization
-    protected boolean isEquals(int a, int b) {
+    protected boolean isNotEquals(int a, int b) {
         return a != b;
     }
 
     @Specialization
-    protected boolean isEquals(int a, double b) {
+    protected boolean isNotEquals(int a, double b) {
         return Math.abs(a - b) >= 1e-6;
     }
 
     @Specialization
-    protected boolean isEquals(double a, int b) {
+    protected boolean isNotEquals(double a, int b) {
         return Math.abs(a - b) >= 1e-6;
     }
 
     @Specialization
-    protected boolean isEquals(double a, double b) {
+    protected boolean isNotEquals(double a, double b) {
         return Math.abs(a - b) >= 1e-6;
     }
 
     @Specialization
-    protected boolean isEquals(String a, String b) {
+    protected boolean isNotEquals(String a, String b) {
         return !a.equals(b);
     }
 

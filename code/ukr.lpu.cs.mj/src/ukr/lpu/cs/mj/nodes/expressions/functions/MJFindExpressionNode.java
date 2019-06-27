@@ -1,7 +1,6 @@
 package ukr.lpu.cs.mj.nodes.expressions.functions;
 
 import com.oracle.truffle.api.dsl.Specialization;
-
 import ukr.lpu.cs.mj.nodes.expressions.MJBinaryExpressionNode;
 
 public abstract class MJFindExpressionNode extends MJBinaryExpressionNode {

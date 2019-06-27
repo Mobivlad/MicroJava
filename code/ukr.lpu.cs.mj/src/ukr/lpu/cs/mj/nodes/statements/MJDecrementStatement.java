@@ -16,7 +16,7 @@ public abstract class MJDecrementStatement extends MJStatementNode {
     }
 
     @Specialization
-    public void doInc(VirtualFrame frame) {
+    public void doDec(VirtualFrame frame) {
         Object o = var.execute(frame);
         if (o instanceof Integer) {
             var.getSymbol(frame).setResult((int) o - 1);

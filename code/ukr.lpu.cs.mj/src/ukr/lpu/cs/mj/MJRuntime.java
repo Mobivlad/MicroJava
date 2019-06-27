@@ -16,8 +16,10 @@ public class MJRuntime {
 
     static String mjTestRD = ""//
                     + "program Sample { "//
-                    + "void main() int i;double j;{ \n"//
-                    + "j=1; print(i);\n"//
+                    + "void main() int i;{ \n"//
+                    + "i=find(\"hel1.0lo\", 1.0);  "//
+                    + "print(replace(\"hello\", \"ll\", 55));\n"//
+                    + "print(i);\n"//
                     + "}\n" //
                     + "}\n";
 

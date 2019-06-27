@@ -19,6 +19,7 @@ import ukr.lpu.cs.mj.nodes.MJVarValueNode;
 import ukr.lpu.cs.mj.nodes.expressions.MJExpressionNode;
 import ukr.lpu.cs.mj.nodes.expressions.MJTernarIfNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.functions.MJFindExpressionNodeGen;
+import ukr.lpu.cs.mj.nodes.expressions.functions.MJReplaceExpressionNodeGen;
 import ukr.lpu.cs.mj.nodes.expressions.operations.*;
 import ukr.lpu.cs.mj.nodes.statements.MJBlockNode;
 import ukr.lpu.cs.mj.nodes.statements.MJBlockNodeGen;
@@ -661,14 +662,26 @@ public final class RecursiveDescentParser {
                 check(rpar);
                 return ret;
             // break;
-            case find:
+            case find: {
                 scan();
                 check(lpar);
-                MJExpressionNode a1 = Expr();// ------------------------------------------------------------BUGS-HERE
+                MJExpressionNode text = Expr();
                 check(comma);
-                MJExpressionNode a2 = Expr();
+                MJExpressionNode pattern = Expr();
                 check(rpar);
-                return MJFindExpressionNodeGen.create(a1, a2);
+                return MJFindExpressionNodeGen.create(text, pattern);
+            }
+            case replace: {
+                scan();
+                check(lpar);
+                MJExpressionNode text = Expr();
+                check(comma);
+                MJExpressionNode target = Expr();
+                check(comma);
+                MJExpressionNode replacement = Expr();
+                check(rpar);
+                return MJReplaceExpressionNodeGen.create(text, target, replacement);
+            }
             default:
                 throw new Error("Invalid fact");
         }

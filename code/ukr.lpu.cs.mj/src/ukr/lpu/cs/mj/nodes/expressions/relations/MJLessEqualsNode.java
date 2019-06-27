@@ -6,22 +6,22 @@ import ukr.lpu.cs.mj.nodes.expressions.MJBinaryExpressionNode;
 
 public abstract class MJLessEqualsNode extends MJBinaryExpressionNode {
     @Specialization
-    protected boolean isLess(int a, int b) {
+    protected boolean isLessEquals(int a, int b) {
         return b >= a;
     }
 
     @Specialization
-    protected boolean isLess(double a, double b) {
+    protected boolean isLessEquals(double a, double b) {
         return (b - a) > 1e-6 || Math.abs(a - b) < 1e-6;
     }
 
     @Specialization
-    protected boolean isLess(double a, int b) {
+    protected boolean isLessEquals(double a, int b) {
         return (b - a) > 1e-6 || Math.abs(a - b) < 1e-6;
     }
 
     @Specialization
-    protected boolean isLess(int a, double b) {
+    protected boolean isLessEquals(int a, double b) {
         return (b - a) > 1e-6 || Math.abs(a - b) < 1e-6;
     }
 }
