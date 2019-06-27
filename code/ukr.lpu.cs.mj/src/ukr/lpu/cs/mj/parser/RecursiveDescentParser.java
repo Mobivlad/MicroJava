@@ -508,12 +508,18 @@ public final class RecursiveDescentParser {
                 scan();
                 check(lpar);
                 MJExpressionNode a = Expr();
-                /*
-                 * if (sym == comma) { scan(); check(number); }
-                 */
+                List<MJExpressionNode> list = new ArrayList<>();
+                for (;;) {
+                    if (sym == comma) {
+                        scan(); /* check(number); */
+                        list.add(Expr());
+                    } else {
+                        break;
+                    }
+                }
                 check(rpar);
                 check(semicolon);
-                return MJPrintNodeGen.create(a);
+                return MJPrintNodeGen.create(list, a);
             // break;
             case lbrace:
                 return Block();

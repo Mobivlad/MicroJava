@@ -1,4 +1,4 @@
 # mj
 Classes is not realised.
-PrintStatement take only variable or value with out string mask.
+PrintStatement can take string mask and several expressions after mask.
 Added function sub string search: find(String,{String | Integer | Double})
